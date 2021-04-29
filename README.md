@@ -10,8 +10,11 @@ flask run
 ```
 - Connect using a http client:
     - Using `curl` :
-```bash
-curl http://127.0.0.1:5000/roll_dice/element
-```
+        ```bash
+        curl http://127.0.0.1:5000/roll_dice/element
+        ```
 
-    - Using `HTTPie` : `http :5000/roll_dice/element`
+    - Using `HTTPie` : 
+        ```bash
+        http :5000/roll_dice/element
+        ```
