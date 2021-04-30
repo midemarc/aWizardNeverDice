@@ -26,16 +26,9 @@ def create_app():
 
     @app.route("/new_game/<you>,<other>")
     def new_game(you, other):
-        def get_or_create_player(name):
-            try:
-                user = Player.get(Player.username == you)
-            except Player.DoesNotExist:
-                user = Player(username = name)
-                user.save()
-            return user
         
-        your_player = get_or_create_player(you)
-        other_player = get_or_create_player(other)
+        your_player, _ = Player.get_or_create(username=you)
+        other_player, _ = Player.get_or_create(username=other)
 
         try:
             game = Game.get(Game.get(
