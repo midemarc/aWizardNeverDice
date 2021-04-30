@@ -31,10 +31,9 @@ def create_app():
         other_player, _ = Player.get_or_create(username=other)
 
         try:
-            game = Game.get(Game.get(
-                (Game.player1 == your_player and Game.player2 == other_player and not Game.finished) or
-                (Game.player2 == your_player and Game.player1 == other_player and not Game.finished)
-            ))
+            game = Game.get_or_none(Game.player1 == your_player, Game.player2 == other_player, Game.finished == False)
+            if not game:
+                game = Game.get(Game.player2 == your_player, Game.player1, Game.finished == False)
         except Game.DoesNotExist:
             game = Game(player1=your_player, player2=other_player)
             game.save()
