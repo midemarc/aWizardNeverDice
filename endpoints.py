@@ -2,6 +2,8 @@ from flask import Flask, abort
 
 # import dice
 from .dice import roll_element, roll_rune
+from .model import Player, Game
+# from peewee import model
 
 
 def create_app():
@@ -20,6 +22,31 @@ def create_app():
             return roll_rune()
         else:
             abort(422)
+
+
+    @app.route("/new_game/<you>,<other>")
+    def new_game(you, other):
+        def get_or_create_player(name):
+            try:
+                user = Player.get(Player.username == you)
+            except Player.DoesNotExist:
+                user = Player(username = name)
+                user.save()
+            return user
+        
+        your_player = get_or_create_player(you)
+        other_player = get_or_create_player(other)
+
+        try:
+            game = Game.get(Game.get(
+                (Game.player1 == your_player and Game.player2 == other_player and not Game.finished) or
+                (Game.player2 == your_player and Game.player1 == other_player and not Game.finished)
+            ))
+        except Game.DoesNotExist:
+            game = Game(player1=your_player, player2=other_player)
+            game.save()
+        
+        return {"game_id": game.id, "player1": game.player1.username, "player2": game.player2.username}
 
     @app.errorhandler(422)
     def bad_argument(error):
