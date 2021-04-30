@@ -1,6 +1,11 @@
+import random
+
+from .utils import read_config
+
 
 def roll_element():
-    return "element"
+    element_choices = read_config()["dice_faces"]["elements"]
+    return random.choice(element_choices)
 
-def roll_rune():
-    return "rune"
+def roll_symbol():
+    return "symbol"

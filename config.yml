@@ -1,0 +1,5 @@
+dice_faces:
+  # Circle, Rectangle, Triangle, Star
+  symbols: [C, R, T, S]
+  # Water, Earth, Fire, Air
+  elements: [W, E, F, A]

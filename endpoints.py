@@ -1,7 +1,7 @@
-from flask import Flask, abort
+from flask import Flask, abort, request
 
 # import dice
-from .dice import roll_element, roll_rune
+from .dice import roll_element, roll_symbol
 from .model import Player, Game
 # from peewee import model
 
@@ -13,13 +13,17 @@ def create_app():
     def hello_world():
         return "Hello world!"
 
-    @app.route('/roll_dice/<kind>')
+    @app.route('/roll_dice/<kind>', methods=["POST"])
     def roll_dice(kind: str):
+        game_id = int(request.json.get("game_id"))
         if kind == "element":
-            # return dice.roll_element()
-            return roll_element()
-        elif kind == "rune":
-            return roll_rune()
+            element_die = roll_element()
+            game = Game.get_by_id(game_id)
+            game.element_dice = element_die
+            game.save()
+            return element_die
+        elif kind == "symbol":
+            return roll_symbol()
         else:
             abort(422)
 
